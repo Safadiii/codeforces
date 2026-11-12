@@ -1,38 +1,56 @@
 use std::io::{self, Read};
-fn main() {
-    let mut input = String::new();
-    io::stdin().read_to_string(&mut input).unwrap();
 
+fn main() {
+
+
+    let mut input = String::from("
+    5
+6
+1 2 2 3 3 3
+1
+5
+3
+7 7 7
+4
+4 1 3 2
+11
+3 1 4 1 5 9 2 6 5 3 5
+");
+
+    // io::stdin().read_to_string(&mut input).unwrap();
 
     let mut iter = input.split_whitespace();
 
     let t: usize = iter.next().unwrap().parse().unwrap();
 
     for _ in 0..t {
-        let n: usize = iter.next().unwrap().parse().unwrap();
+        let n = iter.next().unwrap().parse().unwrap(); //number of books
 
-        let nums: Vec<i64> = (0..n).map(|_| iter.next().unwrap().parse().unwrap()).collect();
+        let mut books: Vec<i32> = Vec::with_capacity(n);
 
-        let mut divisor = 1;
-
-        let mut max_count = 0;
-
-
-        for &d in nums.iter() {
-            let count = nums.iter().filter(|&&x| x % d == 0).count();
-
-            if count > max_count {
-                max_count = count;
-                divisor = d;
-            }
+        for _ in 0..n {
+            let book: i32 = iter.next().unwrap().parse().unwrap();
+            books.push(book);
         }
 
-        let removed = nums.len() - nums.iter()
-                                    .filter(|&&x| x % divisor == 0)
-                                    .count();
+        books.sort();
 
-        
+        let mid = n / 2;
 
-        println!("{:?}", removed);
+        let mut right_side: Vec<i32> = Vec::new();
+        let mut left_side: Vec<i32> = Vec::new();
+
+
+        let mut peak_array: Vec<i32> = Vec::new();
+
+
+        peak_array.extend(&books[..mid]);
+        peak_array.extend(books[mid..].iter().rev());
+
+        for book in &peak_array {
+            print!("{} ", book);
+        }
+        println!();
     }
-}
+
+}   

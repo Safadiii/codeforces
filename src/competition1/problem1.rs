@@ -22,7 +22,7 @@ fn main() {
             }
         } else {
             let sum: i64 = (l..=r).map(|x| x).sum();
-            if sum == 0 || sum == r || sum == l{
+            if sum == 0 || sum == r || sum == l {
                 ans = 0;
             } else {
                 if l.abs() > r.abs() {
