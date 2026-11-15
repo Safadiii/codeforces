@@ -1,56 +1,70 @@
-use std::io::{self, Read};
+use std::{backtrace::BacktraceStatus::Disabled, io::{self, Read}};
 
 fn main() {
-
-
     let mut input = String::from("
-    5
-6
-1 2 2 3 3 3
-1
-5
-3
-7 7 7
 4
-4 1 3 2
-11
-3 1 4 1 5 9 2 6 5 3 5
-");
+1 1
+0
+4 4
+1001
+5 1
+11111
+7 2
+1101001
+"
+    );
+
 
     // io::stdin().read_to_string(&mut input).unwrap();
 
     let mut iter = input.split_whitespace();
 
-    let t: usize = iter.next().unwrap().parse().unwrap();
+    let n_tests: usize = iter.next().unwrap().parse().unwrap();
+    
+    for _ in 0..n_tests {
+        let n: usize = iter.next().unwrap().parse().unwrap();
+        let k: usize = iter.next().unwrap().parse().unwrap();
 
-    for _ in 0..t {
-        let n = iter.next().unwrap().parse().unwrap(); //number of books
+        let initial_string: String = iter.next().unwrap().parse().unwrap();
 
-        let mut books: Vec<i32> = Vec::with_capacity(n);
+        let mut diversity = 0;
 
-        for _ in 0..n {
-            let book: i32 = iter.next().unwrap().parse().unwrap();
-            books.push(book);
+        if n == 1 {
+            if k >= 1 { 
+                println!("{}", 2);
+            } else {
+                println!("{}", 1);
+            }
         }
 
-        books.sort();
+        for (i, char) in initial_string.chars().enumerate() {
+            //find diversity for bit 1
+            if char == '1' {
+                for (next_ch_idx, next_ch) in initial_string.chars().skip(i+1).enumerate() {
+                    if next_ch == '1' {
+                        let distance = next_ch_idx - i;
+                        if distance <= k {
+                            let permutations: u64 = (1..=(distance as u64)).product();
+                            diversity += permutations;
+                        } 
+                    }
+                }
+            }
 
-        let mid = n / 2;
-
-        let mut right_side: Vec<i32> = Vec::new();
-        let mut left_side: Vec<i32> = Vec::new();
-
-
-        let mut peak_array: Vec<i32> = Vec::new();
-
-
-        peak_array.extend(&books[..mid]);
-        peak_array.extend(books[mid..].iter().rev());
-
-        for book in &peak_array {
-            print!("{} ", book);
+            if char == '0' {
+                for (next_ch_idx, next_ch) in initial_string.chars().skip(i+1).enumerate() {
+                    if next_ch == '0' {
+                        let distance = next_ch_idx - i;
+                        if distance <= k {
+                            let permutations: u64 = (1..=(distance as u64)).product();
+                            diversity += permutations;
+                        }
+                    }
+                }
+            }   
         }
-        println!();
+
+        println!("{}", diversity+1);
     }
 
-}   
+}
